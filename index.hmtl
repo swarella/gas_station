@@ -25,7 +25,8 @@
         .home-screen {
             width: 100vw;
             height: 100vh;
-            background: linear-gradient(135deg, #4A90E2, #87CEEB);
+            background: url('assets/images/background_accueil.png') no-repeat center center;
+            background-size: cover;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -527,6 +528,14 @@
             text-align: center;
         }
 
+        .event-card-img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
         .event-footer {
             position: absolute;
             bottom: 0;
@@ -880,15 +889,43 @@ const sabotageCards = [
 ];
 
 // 🔊 AUDIO
+const audioPlayers = {
+    background: null,
+    effects: new Audio()
+};
+
 function playSound(soundName) {
     try {
-        // En mode web, on simule juste le son avec un console.log
-        console.log(`🔊 Playing sound: ${soundName}`);
-        // Dans une vraie implémentation, vous pourriez utiliser:
-        // const audio = new Audio(`assets/audio/${soundName}`);
-        // audio.play();
+        const audio = new Audio(`assets/audio/${soundName}`);
+        audio.volume = 0.6;
+        audio.play().catch(e => console.log('Audio play failed:', e));
     } catch (e) {
         console.error('Erreur audio:', e);
+    }
+}
+
+function playBackgroundMusic() {
+    try {
+        if (audioPlayers.background) {
+            audioPlayers.background.pause();
+        }
+        audioPlayers.background = new Audio('assets/audio/background_music.mp3');
+        audioPlayers.background.loop = true;
+        audioPlayers.background.volume = 0.6;
+        audioPlayers.background.play().catch(e => console.log('Background music failed:', e));
+    } catch (e) {
+        console.error('Erreur musique de fond:', e);
+    }
+}
+
+function stopBackgroundMusic() {
+    try {
+        if (audioPlayers.background) {
+            audioPlayers.background.pause();
+            audioPlayers.background = null;
+        }
+    } catch (e) {
+        console.error('Erreur arrêt musique:', e);
     }
 }
 
@@ -967,6 +1004,9 @@ function showHome() {
     hideAllScreens();
     document.getElementById('homeScreen').classList.remove('hidden');
     currentScreen = 'home';
+    
+    // Démarrer la musique de fond
+    playBackgroundMusic();
 }
 
 function showModeSelection() {
@@ -975,6 +1015,9 @@ function showModeSelection() {
     hideAllScreens();
     document.getElementById('modeSelection').classList.remove('hidden');
     currentScreen = 'modeSelection';
+    
+    // Arrêter la musique de fond
+    stopBackgroundMusic();
 }
 
 function showTeamConfig() {
@@ -1461,6 +1504,7 @@ function triggerEvent() {
 function showEventOverlay() {
     const overlay = document.getElementById('eventOverlay');
     const targetDiv = document.getElementById('eventTarget');
+    const imageDiv = document.getElementById('eventImage');
     
     // Afficher/masquer le joueur ciblé
     if (gameMode === 'classic' && currentEventType === 'sabotage' && targetedPlayer) {
@@ -1468,6 +1512,18 @@ function showEventOverlay() {
         targetDiv.classList.remove('hidden');
     } else {
         targetDiv.classList.add('hidden');
+    }
+    
+    // Afficher l'image de la carte
+    if (currentEventCard) {
+        imageDiv.innerHTML = `
+            <img src="assets/images/cards/${currentEventCard}" 
+                 alt="Carte événement" 
+                 class="event-card-img"
+                 onerror="this.style.display='none'; this.parentNode.innerHTML='🃏<br>Image non trouvée<br>${currentEventCard}'">
+        `;
+    } else {
+        imageDiv.innerHTML = '🃏<br>Carte événement<br>(Aucune carte sélectionnée)';
     }
     
     overlay.classList.remove('hidden');
@@ -1647,7 +1703,8 @@ function showEndGameDialog(winner) {
         
         <div class="modal-buttons">
             <button class="modal-button" onclick="newGame()">Nouvelle partie</button>
-            <button class="modal-button primary" onclick="goBackToSelection()">Retour</button>
+            <button class="modal-button" onclick="goBackToSelection()">Retour</button>
+            <button class="modal-button primary" onclick="goBackToHome()">Accueil</button>
         </div>
     `;
     
@@ -1668,6 +1725,11 @@ function goBackToSelection() {
     }
 }
 
+function goBackToHome() {
+    closeModal();
+    showHome();
+}
+
 // 🚀 INITIALISATION
 function init() {
     loadSettings();
@@ -1681,7 +1743,13 @@ function init() {
         }
     });
     
-    console.log('🎮 Gas Station loaded!');
+    // Interaction utilisateur requise pour l'audio sur certains navigateurs
+    document.addEventListener('click', function initAudio() {
+        // Autoriser l'audio après le premier clic
+        document.removeEventListener('click', initAudio);
+    }, { once: true });
+    
+    console.log('🎮 Gas Station loaded with full assets!');
 }
 
 // Lancer l'application quand la page est chargée
