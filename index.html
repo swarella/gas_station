@@ -1,0 +1,1760 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gas Station</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* PAGE D'ACCUEIL */
+        .home-screen {
+            width: 100vw;
+            height: 100vh;
+            background: url('assets/images/background_accueil.png') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .play-button {
+            background: linear-gradient(135deg, #8A2BE2, #9932CC);
+            color: white;
+            border: none;
+            padding: 18px 50px;
+            font-size: 28px;
+            font-weight: bold;
+            border-radius: 35px;
+            cursor: pointer;
+            box-shadow: 0 12px 24px rgba(138, 43, 226, 0.4);
+            transition: transform 0.2s ease;
+        }
+
+        .play-button:hover {
+            transform: scale(1.05);
+        }
+
+        .play-button:active {
+            transform: scale(0.95);
+        }
+
+        /* PAGE SÉLECTION MODE */
+        .mode-selection {
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #4A90E2, #87CEEB, #F0F8FF);
+            padding: 20px;
+        }
+
+        .app-bar {
+            background: #4A90E2;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: -20px -20px 20px -20px;
+        }
+
+        .app-bar.pink {
+            background: #E91E63;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 15px;
+            padding: 5px;
+        }
+
+        .app-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .mode-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 40px 0;
+        }
+
+        .mode-button {
+            background: linear-gradient(135deg, #4A90E2, #5BA3F5);
+            color: white;
+            border: none;
+            padding: 25px;
+            border-radius: 20px;
+            cursor: pointer;
+            box-shadow: 0 8px 16px rgba(74, 144, 226, 0.4);
+            transition: transform 0.2s ease;
+        }
+
+        .mode-button.saboteurs {
+            background: linear-gradient(135deg, #E91E63, #F06292);
+            box-shadow: 0 8px 16px rgba(233, 30, 99, 0.4);
+        }
+
+        .mode-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .mode-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .mode-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .mode-description {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* PAGE CONFIGURATION ÉQUIPES */
+        .team-config {
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #E91E63, #EC407A, #F8BBD9);
+            padding: 20px;
+        }
+
+        .config-content {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 100px);
+            gap: 20px;
+        }
+
+        .white-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #E91E63;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .number-selector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .number-button {
+            background: #E91E63;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .number-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .number-display {
+            background: #E91E63;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 15px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .team-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .team-input:focus {
+            outline: none;
+            border-color: #E91E63;
+            box-shadow: 0 0 0 2px rgba(233, 30, 99, 0.2);
+        }
+
+        .start-button {
+            background: linear-gradient(135deg, #52C41A, #73D13D);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 8px 16px rgba(82, 196, 26, 0.4);
+            transition: transform 0.2s ease;
+        }
+
+        .start-button:hover {
+            transform: translateY(-2px);
+        }
+
+        /* PAGE DE JEU */
+        .game-screen {
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #4A90E2, #87CEEB, #F0F8FF);
+            padding: 16px;
+        }
+
+        .game-screen.saboteurs {
+            background: linear-gradient(135deg, #E91E63, #EC407A, #F8BBD9);
+        }
+
+        .game-content {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 100px);
+            gap: 20px;
+        }
+
+        .game-header {
+            background: linear-gradient(135deg, rgba(255,255,255,1), rgba(255,255,255,0.95));
+            border-radius: 25px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .status-badge {
+            background: linear-gradient(135deg, #52C41A, #73D13D);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 8px rgba(82, 196, 26, 0.3);
+            margin-bottom: 12px;
+        }
+
+        .game-timer {
+            font-size: 32px;
+            font-weight: bold;
+            color: #4A90E2;
+            margin-bottom: 16px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .game-timer.saboteurs {
+            color: #E91E63;
+        }
+
+        .game-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .control-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .control-button:hover {
+            transform: translateY(-1px);
+        }
+
+        .stop-button {
+            background: #E53E3E;
+            color: white;
+        }
+
+        .reset-button {
+            background: #FFC107;
+            color: #E53E3E;
+        }
+
+        .start-game-button {
+            background: linear-gradient(135deg, #52C41A, #73D13D);
+            color: white;
+            padding: 16px 32px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 8px 16px rgba(82, 196, 26, 0.4);
+        }
+
+        .scores-section {
+            flex: 1;
+            background: linear-gradient(135deg, rgba(255,255,255,1), rgba(255,255,255,0.95));
+            border-radius: 25px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .scores-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .scores-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4A90E2;
+        }
+
+        .scores-title.saboteurs {
+            color: #E91E63;
+        }
+
+        .winning-badge {
+            background: rgba(82, 196, 26, 0.1);
+            color: #52C41A;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid rgba(82, 196, 26, 0.3);
+        }
+
+        .players-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .player-card {
+            background: white;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .player-name {
+            flex: 1;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .player-score {
+            font-size: 24px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .score-button {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+
+        .score-button:active {
+            transform: scale(0.95);
+        }
+
+        .minus-button {
+            background: #E53E3E;
+        }
+
+        .plus-button {
+            background: #52C41A;
+        }
+
+        /* MODAL/DIALOG */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 400px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .modal-button {
+            padding: 10px 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .modal-button.primary {
+            background: #4A90E2;
+            color: white;
+            border-color: #4A90E2;
+        }
+
+        .modal-button:hover {
+            background: #f5f5f5;
+        }
+
+        .modal-button.primary:hover {
+            background: #357ABD;
+        }
+
+        /* OVERLAY CARTE ÉVÉNEMENT */
+        .event-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: black;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .event-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+            padding: 20px;
+            text-align: center;
+            z-index: 2001;
+        }
+
+        .event-title {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+            margin-bottom: 8px;
+        }
+
+        .event-target {
+            background: linear-gradient(135deg, #E53E3E, rgba(229, 62, 62, 0.8));
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            box-shadow: 0 3px 6px rgba(229, 62, 62, 0.4);
+        }
+
+        .event-image {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .event-card-img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .event-footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            padding: 20px;
+            text-align: center;
+            z-index: 2001;
+        }
+
+        .event-ok-button {
+            background: linear-gradient(135deg, #52C41A, #73D13D);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 8px 16px rgba(82, 196, 26, 0.4);
+        }
+
+        /* SETTINGS ET HISTORY */
+        .settings-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .switch {
+            position: relative;
+            width: 50px;
+            height: 25px;
+            background: #ccc;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .switch.active {
+            background: #4A90E2;
+        }
+
+        .switch::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 21px;
+            height: 21px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .switch.active::before {
+            transform: translateX(25px);
+        }
+
+        .history-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .history-winner {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .history-details {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .mode-buttons {
+                padding: 20px 0;
+            }
+            
+            .modal {
+                width: 95%;
+                padding: 15px;
+            }
+            
+            .game-timer {
+                font-size: 28px;
+            }
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* POINTS SELECTION GRID */
+        .points-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .points-grid .point-button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .points-grid .point-button:hover {
+            background: #1976D2;
+        }
+
+        /* SCORE CORRECTION */
+        .score-correction {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .correction-button {
+            width: 50px;
+            height: 35px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+        }
+
+        .correction-button.minus {
+            background: #E53E3E;
+        }
+
+        .correction-button.plus {
+            background: #52C41A;
+        }
+
+        .correction-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* ICON BUTTONS */
+        .icon-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 26px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: background 0.2s ease;
+        }
+
+        .icon-button:hover {
+            background: rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+
+<!-- PAGE D'ACCUEIL -->
+<div id="homeScreen" class="home-screen">
+    <button class="play-button" onclick="showModeSelection()">
+        🎮 JOUER
+    </button>
+</div>
+
+<!-- PAGE SÉLECTION MODE -->
+<div id="modeSelection" class="mode-selection hidden">
+    <div class="app-bar">
+        <button class="back-button" onclick="showHome()">←</button>
+        <div class="app-title">Choisir le mode de jeu</div>
+    </div>
+    
+    <div class="mode-buttons">
+        <button class="mode-button" onclick="startClassicMode()">
+            <div class="mode-icon">⛽</div>
+            <div class="mode-title">MODE CLASSIQUE</div>
+            <div class="mode-description">Joueurs individuels<br>Événements aléas + sabotages</div>
+        </button>
+        
+        <button class="mode-button saboteurs" onclick="showTeamConfig()">
+            <div class="mode-icon">👥</div>
+            <div class="mode-title">MODE SABOTEURS</div>
+            <div class="mode-description">Jeu en équipes<br>Événements aléas uniquement</div>
+        </button>
+    </div>
+</div>
+
+<!-- PAGE CONFIGURATION ÉQUIPES -->
+<div id="teamConfig" class="team-config hidden">
+    <div class="app-bar pink">
+        <button class="back-button" onclick="showModeSelection()">←</button>
+        <div class="app-title">Configuration des équipes</div>
+    </div>
+    
+    <div class="config-content">
+        <div class="white-card">
+            <div class="card-title">Nombre d'équipes</div>
+            <div class="number-selector">
+                <button class="number-button" onclick="changeTeamCount(-1)">−</button>
+                <div class="number-display" id="teamCount">2</div>
+                <button class="number-button" onclick="changeTeamCount(1)">+</button>
+            </div>
+        </div>
+        
+        <div class="white-card" style="flex: 1;">
+            <div class="card-title">Noms des équipes</div>
+            <div id="teamInputs"></div>
+        </div>
+        
+        <button class="start-button" onclick="startSaboteursMode()">
+            COMMENCER LA PARTIE
+        </button>
+    </div>
+</div>
+
+<!-- PAGE DE JEU -->
+<div id="gameScreen" class="game-screen hidden">
+    <div class="app-bar" id="gameAppBar">
+        <button class="back-button" onclick="goBack()">←</button>
+        <div class="app-title" id="gameTitle">Gas Station</div>
+        <div style="margin-left: auto; display: flex; gap: 10px;">
+            <button class="icon-button" onclick="showHistory()">📋</button>
+            <button class="icon-button" onclick="showSettings()">⚙️</button>
+        </div>
+    </div>
+    
+    <div class="game-content">
+        <div class="game-header">
+            <div id="gameStatus" class="hidden">
+                <div class="status-badge">🎮 PARTIE EN COURS</div>
+                <div class="game-timer" id="gameTimer">00:00</div>
+                <div class="game-controls">
+                    <button class="control-button stop-button" onclick="endGame()">⏹️ Arrêter</button>
+                    <button class="control-button reset-button" onclick="resetGame()">🔄 Nouvelle</button>
+                </div>
+            </div>
+            
+            <div id="gameStart">
+                <div style="font-size: 48px; margin-bottom: 12px;" id="gameIcon">⛽</div>
+                <div style="font-size: 24px; font-weight: bold; color: #4A90E2; margin-bottom: 16px;" id="gameSubtitle">Prêts à jouer ?</div>
+                <button class="start-game-button" onclick="startGame()">
+                    ▶️ COMMENCER LA PARTIE
+                </button>
+            </div>
+        </div>
+        
+        <div class="scores-section">
+            <div class="scores-header">
+                <div style="font-size: 28px;">🏆</div>
+                <div class="scores-title" id="scoresTitle">Scores</div>
+                <div class="winning-badge">Premier à 7</div>
+            </div>
+            <div class="players-list" id="playersList"></div>
+        </div>
+    </div>
+</div>
+
+<!-- OVERLAY CARTE ÉVÉNEMENT -->
+<div id="eventOverlay" class="event-overlay hidden">
+    <div class="event-header">
+        <div class="event-title">🎲 CARTE ÉVÉNEMENT ! 🎲</div>
+        <div id="eventTarget" class="event-target hidden"></div>
+    </div>
+    
+    <div class="event-image" id="eventImage">
+        🃏<br>Carte événement<br>(Image non disponible)
+    </div>
+    
+    <div class="event-footer">
+        <button class="event-ok-button" onclick="closeEvent()">OK</button>
+    </div>
+</div>
+
+<!-- MODAL OVERLAY -->
+<div id="modalOverlay" class="modal-overlay hidden">
+    <div class="modal" id="modalContent"></div>
+</div>
+
+<script>
+// 🎮 VARIABLES GLOBALES
+let currentScreen = 'home';
+let gameMode = 'classic'; // 'classic' ou 'saboteurs'
+let gameStarted = false;
+let gameStartTime = null;
+let gameTimer = null;
+let eventTimer = null;
+let gameDuration = 0;
+let players = [];
+let numberOfPlayers = 2;
+let numberOfTeams = 2;
+let eventsEnabled = true;
+let fullScreenMode = false;
+let showEventMessage = false;
+let currentEventCard = null;
+let currentEventType = null;
+let targetedPlayer = null;
+let lastEventCard = null;
+let history = [];
+
+const winningScore = 7;
+const noEventPeriod = 120; // 2 minutes
+
+// 🎲 CARTES
+const aleaCards = [
+    'alea_carte_01.png', 'alea_carte_02.png', 'alea_carte_03.png',
+    'alea_carte_04.png', 'alea_carte_05.png', 'alea_carte_06.png',
+    'alea_carte_07.png', 'alea_carte_08.png', 'alea_carte_09.png'
+];
+
+const sabotageCards = [
+    'sabotage_carte_01.png', 'sabotage_carte_02.png', 'sabotage_carte_03.png',
+    'sabotage_carte_04.png', 'sabotage_carte_05.png', 'sabotage_carte_06.png',
+    'sabotage_carte_07.png', 'sabotage_carte_08.png', 'sabotage_carte_09.png',
+    'sabotage_carte_10.png', 'sabotage_carte_11.png', 'sabotage_carte_12.png',
+    'sabotage_carte_13.png', 'sabotage_carte_14.png', 'sabotage_carte_15.png',
+    'sabotage_carte_16.png', 'sabotage_carte_17.png', 'sabotage_carte_18.png',
+    'sabotage_carte_19.png', 'sabotage_carte_20.png', 'sabotage_carte_21.png',
+    'sabotage_carte_22.png'
+];
+
+// 🔊 AUDIO
+const audioPlayers = {
+    background: null,
+    effects: new Audio()
+};
+
+function playSound(soundName) {
+    try {
+        const audio = new Audio(`assets/audio/${soundName}`);
+        audio.volume = 0.6;
+        audio.play().catch(e => console.log('Audio play failed:', e));
+    } catch (e) {
+        console.error('Erreur audio:', e);
+    }
+}
+
+function playBackgroundMusic() {
+    try {
+        if (audioPlayers.background) {
+            audioPlayers.background.pause();
+        }
+        audioPlayers.background = new Audio('assets/audio/background_music.mp3');
+        audioPlayers.background.loop = true;
+        audioPlayers.background.volume = 0.6;
+        audioPlayers.background.play().catch(e => console.log('Background music failed:', e));
+    } catch (e) {
+        console.error('Erreur musique de fond:', e);
+    }
+}
+
+function stopBackgroundMusic() {
+    try {
+        if (audioPlayers.background) {
+            audioPlayers.background.pause();
+            audioPlayers.background = null;
+        }
+    } catch (e) {
+        console.error('Erreur arrêt musique:', e);
+    }
+}
+
+function vibrate() {
+    if (navigator.vibrate) {
+        navigator.vibrate(50);
+    }
+}
+
+// 💾 STOCKAGE LOCAL
+function saveSettings() {
+    localStorage.setItem('eventsEnabled', eventsEnabled);
+    localStorage.setItem('fullScreenMode', fullScreenMode);
+    localStorage.setItem('numberOfPlayers', numberOfPlayers);
+    localStorage.setItem('numberOfTeams', numberOfTeams);
+}
+
+function loadSettings() {
+    eventsEnabled = localStorage.getItem('eventsEnabled') !== 'false';
+    fullScreenMode = localStorage.getItem('fullScreenMode') === 'true';
+    numberOfPlayers = parseInt(localStorage.getItem('numberOfPlayers')) || 2;
+    numberOfTeams = parseInt(localStorage.getItem('numberOfTeams')) || 2;
+}
+
+function savePlayerName(index, name) {
+    localStorage.setItem(`player_${index}_name`, name);
+}
+
+function loadPlayerName(index) {
+    return localStorage.getItem(`player_${index}_name`) || `Joueur ${index + 1}`;
+}
+
+function saveTeamName(index, name) {
+    localStorage.setItem(`team_${index}_name`, name);
+}
+
+function loadTeamName(index) {
+    return localStorage.getItem(`team_${index}_name`) || `Équipe ${index + 1}`;
+}
+
+function saveHistory() {
+    localStorage.setItem('gameHistory', JSON.stringify(history));
+}
+
+function loadHistory() {
+    const stored = localStorage.getItem('gameHistory');
+    if (stored) {
+        history = JSON.parse(stored);
+    }
+}
+
+// 🕐 FORMATAGE TEMPS
+function formatDuration(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    
+    const pad = (n) => n.toString().padStart(2, '0');
+    
+    if (hours > 0) {
+        return `${pad(hours)}:${pad(minutes)}:${pad(secs)}`;
+    } else {
+        return `${pad(minutes)}:${pad(secs)}`;
+    }
+}
+
+// 🎨 GESTION DES ÉCRANS
+function hideAllScreens() {
+    document.getElementById('homeScreen').classList.add('hidden');
+    document.getElementById('modeSelection').classList.add('hidden');
+    document.getElementById('teamConfig').classList.add('hidden');
+    document.getElementById('gameScreen').classList.add('hidden');
+}
+
+function showHome() {
+    hideAllScreens();
+    document.getElementById('homeScreen').classList.remove('hidden');
+    currentScreen = 'home';
+    
+    // Démarrer la musique de fond
+    playBackgroundMusic();
+}
+
+function showModeSelection() {
+    playSound('button_click.mp3');
+    vibrate();
+    hideAllScreens();
+    document.getElementById('modeSelection').classList.remove('hidden');
+    currentScreen = 'modeSelection';
+    
+    // Arrêter la musique de fond
+    stopBackgroundMusic();
+}
+
+function showTeamConfig() {
+    playSound('button_click.mp3');
+    vibrate();
+    hideAllScreens();
+    document.getElementById('teamConfig').classList.remove('hidden');
+    currentScreen = 'teamConfig';
+    updateTeamInputs();
+}
+
+function showGameScreen(mode) {
+    hideAllScreens();
+    gameMode = mode;
+    
+    const gameScreen = document.getElementById('gameScreen');
+    const gameAppBar = document.getElementById('gameAppBar');
+    const gameTitle = document.getElementById('gameTitle');
+    const gameIcon = document.getElementById('gameIcon');
+    const gameSubtitle = document.getElementById('gameSubtitle');
+    const scoresTitle = document.getElementById('scoresTitle');
+    
+    // Appliquer le thème selon le mode
+    if (mode === 'saboteurs') {
+        gameScreen.classList.add('saboteurs');
+        gameAppBar.classList.add('pink');
+        gameTitle.textContent = 'Gas Station - Saboteurs';
+        gameIcon.textContent = '👥';
+        gameSubtitle.style.color = '#E91E63';
+        scoresTitle.classList.add('saboteurs');
+    } else {
+        gameScreen.classList.remove('saboteurs');
+        gameAppBar.classList.remove('pink');
+        gameTitle.textContent = 'Gas Station';
+        gameIcon.textContent = '⛽';
+        gameSubtitle.style.color = '#4A90E2';
+        scoresTitle.classList.remove('saboteurs');
+    }
+    
+    gameScreen.classList.remove('hidden');
+    currentScreen = 'game';
+    
+    updatePlayersDisplay();
+}
+
+// 🎯 MODES DE JEU
+function startClassicMode() {
+    playSound('button_click.mp3');
+    vibrate();
+    
+    // Initialiser les joueurs pour le mode classique
+    players = [];
+    for (let i = 0; i < numberOfPlayers; i++) {
+        players.push({
+            name: loadPlayerName(i),
+            score: 0
+        });
+    }
+    
+    showGameScreen('classic');
+}
+
+function startSaboteursMode() {
+    playSound('button_click.mp3');
+    vibrate();
+    
+    // Récupérer les noms des équipes depuis les inputs
+    const teamInputs = document.querySelectorAll('#teamInputs input');
+    players = [];
+    
+    teamInputs.forEach((input, index) => {
+        const name = input.value.trim() || `Équipe ${index + 1}`;
+        saveTeamName(index, name);
+        players.push({
+            name: name,
+            score: 0
+        });
+    });
+    
+    showGameScreen('saboteurs');
+}
+
+// 👥 GESTION DES ÉQUIPES
+function changeTeamCount(delta) {
+    const newCount = numberOfTeams + delta;
+    if (newCount >= 2 && newCount <= 8) {
+        numberOfTeams = newCount;
+        document.getElementById('teamCount').textContent = numberOfTeams;
+        updateTeamInputs();
+        saveSettings();
+    }
+}
+
+function updateTeamInputs() {
+    const container = document.getElementById('teamInputs');
+    container.innerHTML = '';
+    
+    for (let i = 0; i < numberOfTeams; i++) {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'team-input';
+        input.placeholder = `Équipe ${i + 1}`;
+        input.value = loadTeamName(i);
+        input.maxLength = 20;
+        input.addEventListener('input', (e) => {
+            const name = e.target.value.trim() || `Équipe ${i + 1}`;
+            saveTeamName(i, name);
+        });
+        container.appendChild(input);
+    }
+}
+
+// 🎮 GESTION DU JEU
+function startGame() {
+    playSound('button_click.mp3');
+    vibrate();
+    
+    gameStarted = true;
+    gameStartTime = Date.now();
+    gameDuration = 0;
+    
+    // Afficher/cacher les éléments
+    document.getElementById('gameStatus').classList.remove('hidden');
+    document.getElementById('gameStart').classList.add('hidden');
+    
+    // Démarrer le timer
+    gameTimer = setInterval(updateGameTimer, 1000);
+    
+    // Planifier les événements
+    if (eventsEnabled) {
+        scheduleRandomEvents();
+    }
+    
+    // Mode plein écran si activé
+    if (fullScreenMode) {
+        try {
+            document.documentElement.requestFullscreen();
+        } catch (e) {
+            console.log('Fullscreen not supported');
+        }
+    }
+}
+
+function updateGameTimer() {
+    if (gameStartTime) {
+        gameDuration = Math.floor((Date.now() - gameStartTime) / 1000);
+        document.getElementById('gameTimer').textContent = formatDuration(gameDuration);
+        
+        // Mettre à jour la couleur du timer selon le mode
+        const timer = document.getElementById('gameTimer');
+        if (gameMode === 'saboteurs') {
+            timer.classList.add('saboteurs');
+        } else {
+            timer.classList.remove('saboteurs');
+        }
+    }
+}
+
+function endGame(winner = null) {
+    gameStarted = false;
+    
+    if (gameTimer) {
+        clearInterval(gameTimer);
+        gameTimer = null;
+    }
+    
+    if (eventTimer) {
+        clearTimeout(eventTimer);
+        eventTimer = null;
+    }
+    
+    // Sortir du mode plein écran
+    if (document.fullscreenElement) {
+        document.exitFullscreen();
+    }
+    
+    // Ajouter à l'historique
+    const gameSession = {
+        duration: gameDuration,
+        winner: winner || 'Partie interrompue',
+        players: [...players],
+        timestamp: Date.now(),
+        mode: gameMode
+    };
+    
+    history.unshift(gameSession);
+    if (history.length > 10) {
+        history = history.slice(0, 10);
+    }
+    saveHistory();
+    
+    // Jouer la musique de victoire
+    if (winner && winner !== 'Partie interrompue') {
+        playSound('victory_music.mp3');
+    }
+    
+    // Afficher le dialog de fin
+    showEndGameDialog(winner);
+}
+
+function resetGame() {
+    if (gameTimer) {
+        clearInterval(gameTimer);
+        gameTimer = null;
+    }
+    
+    if (eventTimer) {
+        clearTimeout(eventTimer);
+        eventTimer = null;
+    }
+    
+    gameStarted = false;
+    gameStartTime = null;
+    gameDuration = 0;
+    showEventMessage = false;
+    currentEventCard = null;
+    currentEventType = null;
+    targetedPlayer = null;
+    lastEventCard = null;
+    
+    // Reset scores
+    players.forEach(player => player.score = 0);
+    
+    // Afficher/cacher les éléments
+    document.getElementById('gameStatus').classList.add('hidden');
+    document.getElementById('gameStart').classList.remove('hidden');
+    
+    // Sortir du mode plein écran
+    if (document.fullscreenElement) {
+        document.exitFullscreen();
+    }
+    
+    updatePlayersDisplay();
+}
+
+function goBack() {
+    if (currentScreen === 'game') {
+        if (gameMode === 'saboteurs') {
+            showTeamConfig();
+        } else {
+            showModeSelection();
+        }
+    } else if (currentScreen === 'teamConfig') {
+        showModeSelection();
+    } else if (currentScreen === 'modeSelection') {
+        showHome();
+    }
+}
+
+// 📊 GESTION DES SCORES
+function updatePlayersDisplay() {
+    const container = document.getElementById('playersList');
+    container.innerHTML = '';
+    
+    players.forEach((player, index) => {
+        const card = document.createElement('div');
+        card.className = 'player-card';
+        
+        card.innerHTML = `
+            <div class="player-name" onclick="editPlayerName(${index})">${player.name}</div>
+            <div class="player-score">${player.score}</div>
+            <button class="score-button minus-button" onclick="updatePlayerScore(${index}, -1)">−</button>
+            <button class="score-button plus-button" onclick="showAddPointsDialog(${index})">+</button>
+        `;
+        
+        container.appendChild(card);
+    });
+}
+
+function updatePlayerScore(index, change) {
+    players[index].score += change;
+    if (players[index].score < 0) {
+        players[index].score = 0;
+    }
+    
+    updatePlayersDisplay();
+    showScoreConfirmation(index, change);
+}
+
+function showScoreConfirmation(playerIndex, change) {
+    const player = players[playerIndex];
+    const changeText = change > 0 ? `+${change}` : `${change}`;
+    
+    const content = `
+        <div class="modal-title">
+            ${change > 0 ? '➕' : '➖'} Score mis à jour
+        </div>
+        <div style="text-align: center; margin: 15px 0;">
+            <div style="font-size: 20px; font-weight: bold; color: ${gameMode === 'saboteurs' ? '#E91E63' : '#4A90E2'}; margin-bottom: 15px;">
+                ${player.name}
+            </div>
+            <div style="margin-bottom: 10px;">
+                Score: <span style="font-size: 24px; font-weight: bold; color: ${player.score >= winningScore ? '#52C41A' : 'black'};">${player.score}</span>
+            </div>
+            <div style="padding: 6px 12px; background: ${change > 0 ? 'rgba(82,196,26,0.1)' : 'rgba(229,62,62,0.1)'}; border: 1px solid ${change > 0 ? '#52C41A' : '#E53E3E'}; border-radius: 8px; color: ${change > 0 ? '#52C41A' : '#E53E3E'}; font-weight: 600; display: inline-block;">
+                ${changeText} points
+            </div>
+        </div>
+        <div style="text-align: center; font-size: 14px; color: #666; margin: 20px 0 10px 0;">
+            Corriger le score si nécessaire:
+        </div>
+        <div class="score-correction">
+            <button class="correction-button minus" onclick="correctScore(${playerIndex}, -1)" ${player.score <= 0 ? 'disabled' : ''}>-1</button>
+            <button class="correction-button plus" onclick="correctScore(${playerIndex}, 1)">+1</button>
+        </div>
+        <div class="modal-buttons">
+            <button class="modal-button primary" onclick="closeScoreConfirmation(${playerIndex})">OK</button>
+        </div>
+    `;
+    
+    showModal(content);
+}
+
+function correctScore(playerIndex, change) {
+    players[playerIndex].score += change;
+    if (players[playerIndex].score < 0) {
+        players[playerIndex].score = 0;
+    }
+    updatePlayersDisplay();
+    showScoreConfirmation(playerIndex, 0); // Rafraîchir le modal
+}
+
+function closeScoreConfirmation(playerIndex) {
+    closeModal();
+    
+    // Vérifier la victoire
+    if (players[playerIndex].score >= winningScore) {
+        const winner = players[playerIndex].name;
+        endGame(winner);
+    }
+}
+
+function showAddPointsDialog(playerIndex) {
+    const player = players[playerIndex];
+    
+    const content = `
+        <div class="modal-title">Ajouter des points à ${player.name}</div>
+        <div style="text-align: center; margin: 15px 0;">
+            Score actuel: <strong>${player.score}</strong>
+        </div>
+        <div style="text-align: center; font-size: 14px; margin-bottom: 15px;">
+            Choisissez le nombre de points à ajouter:
+        </div>
+        <div class="points-grid">
+            <button class="point-button" onclick="addPoints(${playerIndex}, 1)">1</button>
+            <button class="point-button" onclick="addPoints(${playerIndex}, 2)">2</button>
+            <button class="point-button" onclick="addPoints(${playerIndex}, 3)">3</button>
+            <button class="point-button" onclick="addPoints(${playerIndex}, 4)">4</button>
+            <button class="point-button" onclick="addPoints(${playerIndex}, 5)">5</button>
+            <button class="point-button" onclick="closeModal()">Annuler</button>
+        </div>
+    `;
+    
+    showModal(content);
+}
+
+function addPoints(playerIndex, points) {
+    closeModal();
+    updatePlayerScore(playerIndex, points);
+}
+
+function editPlayerName(index) {
+    // Seulement pour le mode classique
+    if (gameMode !== 'classic') return;
+    
+    const player = players[index];
+    const newName = prompt('Modifier le nom:', player.name);
+    
+    if (newName && newName.trim()) {
+        player.name = newName.trim();
+        savePlayerName(index, player.name);
+        updatePlayersDisplay();
+    }
+}
+
+// 🎲 SYSTÈME D'ÉVÉNEMENTS
+function scheduleRandomEvents() {
+    if (eventTimer) {
+        clearTimeout(eventTimer);
+    }
+    
+    // Attendre la période sans événements (2 min)
+    eventTimer = setTimeout(() => {
+        scheduleNextEvent();
+    }, noEventPeriod * 1000);
+}
+
+function scheduleNextEvent() {
+    if (!gameStarted || !eventsEnabled) return;
+    
+    // Calculer le délai selon le mode
+    let minDelay, maxDelay;
+    
+    if (gameMode === 'saboteurs') {
+        // Mode saboteurs : 8-10 minutes
+        minDelay = 480; // 8 minutes
+        maxDelay = 600; // 10 minutes
+    } else {
+        // Mode classique : 2-4 minutes
+        minDelay = 120; // 2 minutes
+        maxDelay = 240; // 4 minutes
+    }
+    
+    const delay = minDelay + Math.random() * (maxDelay - minDelay);
+    
+    eventTimer = setTimeout(() => {
+        if (gameStarted && eventsEnabled) {
+            triggerEvent();
+            scheduleNextEvent();
+        }
+    }, delay * 1000);
+}
+
+function selectRandomEvent() {
+    let selectedCard = null;
+    let attempts = 0;
+    const maxAttempts = 10;
+    
+    if (gameMode === 'saboteurs') {
+        // Mode saboteurs : SEULEMENT des cartes aléas
+        currentEventType = 'alea';
+        
+        if (aleaCards.length > 0) {
+            do {
+                const cardIndex = Math.floor(Math.random() * aleaCards.length);
+                selectedCard = aleaCards[cardIndex];
+                attempts++;
+            } while (selectedCard === lastEventCard && attempts < maxAttempts && aleaCards.length > 1);
+            
+            currentEventCard = selectedCard;
+            targetedPlayer = null;
+        }
+    } else {
+        // Mode classique : logique originale (aléas + sabotages)
+        const totalCards = aleaCards.length + sabotageCards.length;
+        const aleaProbability = aleaCards.length / totalCards;
+        const randomValue = Math.random();
+        const isAlea = randomValue < aleaProbability;
+        
+        if (!isAlea && sabotageCards.length > 0) {
+            // Carte sabotage + joueur ciblé
+            currentEventType = 'sabotage';
+            
+            do {
+                const cardIndex = Math.floor(Math.random() * sabotageCards.length);
+                selectedCard = sabotageCards[cardIndex];
+                attempts++;
+            } while (selectedCard === lastEventCard && attempts < maxAttempts && sabotageCards.length > 1);
+            
+            currentEventCard = selectedCard;
+            
+            // Choisir un joueur au hasard
+            const playerIndex = Math.floor(Math.random() * players.length);
+            targetedPlayer = players[playerIndex].name;
+            
+        } else if (aleaCards.length > 0) {
+            // Carte aléa
+            currentEventType = 'alea';
+            
+            do {
+                const cardIndex = Math.floor(Math.random() * aleaCards.length);
+                selectedCard = aleaCards[cardIndex];
+                attempts++;
+            } while (selectedCard === lastEventCard && attempts < maxAttempts && aleaCards.length > 1);
+            
+            currentEventCard = selectedCard;
+            targetedPlayer = null;
+        }
+    }
+    
+    lastEventCard = currentEventCard;
+}
+
+function triggerEvent() {
+    selectRandomEvent();
+    
+    vibrate();
+    playSound('alarm.mp3');
+    
+    showEventMessage = true;
+    showEventOverlay();
+}
+
+function showEventOverlay() {
+    const overlay = document.getElementById('eventOverlay');
+    const targetDiv = document.getElementById('eventTarget');
+    const imageDiv = document.getElementById('eventImage');
+    
+    // Afficher/masquer le joueur ciblé
+    if (gameMode === 'classic' && currentEventType === 'sabotage' && targetedPlayer) {
+        targetDiv.textContent = `🎯 Ciblé : ${targetedPlayer}`;
+        targetDiv.classList.remove('hidden');
+    } else {
+        targetDiv.classList.add('hidden');
+    }
+    
+    // Afficher l'image de la carte
+    if (currentEventCard) {
+        imageDiv.innerHTML = `
+            <img src="assets/images/cards/${currentEventCard}" 
+                 alt="Carte événement" 
+                 class="event-card-img"
+                 onerror="this.style.display='none'; this.parentNode.innerHTML='🃏<br>Image non trouvée<br>${currentEventCard}'">
+        `;
+    } else {
+        imageDiv.innerHTML = '🃏<br>Carte événement<br>(Aucune carte sélectionnée)';
+    }
+    
+    overlay.classList.remove('hidden');
+}
+
+function closeEvent() {
+    showEventMessage = false;
+    currentEventCard = null;
+    document.getElementById('eventOverlay').classList.add('hidden');
+}
+
+// 🔧 PARAMÈTRES
+function showSettings() {
+    const content = `
+        <div class="modal-title">Paramètres</div>
+        <div class="settings-item">
+            <span>Événements aléatoires</span>
+            <div class="switch ${eventsEnabled ? 'active' : ''}" onclick="toggleEvents()"></div>
+        </div>
+        <div class="settings-item">
+            <span>Mode plein écran</span>
+            <div class="switch ${fullScreenMode ? 'active' : ''}" onclick="toggleFullscreen()"></div>
+        </div>
+        ${gameMode === 'classic' ? `
+        <div class="settings-item">
+            <span>Nombre de joueurs:</span>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <button class="number-button" onclick="changePlayerCount(-1)" ${numberOfPlayers <= 2 ? 'disabled' : ''}>−</button>
+                <span style="font-weight: bold;">${numberOfPlayers}</span>
+                <button class="number-button" onclick="changePlayerCount(1)" ${numberOfPlayers >= 8 ? 'disabled' : ''}>+</button>
+            </div>
+        </div>
+        ` : ''}
+        <div style="text-align: center; font-size: 14px; color: #666; margin: 15px 0;">
+            Victoire à ${winningScore} points
+        </div>
+        <div style="text-align: center; font-size: 12px; color: #999;">
+            ${gameMode === 'saboteurs' ? 
+                `Mode Saboteurs - Aléas uniquement: ${aleaCards.length} cartes` :
+                `Cartes aléas: ${aleaCards.length} | Cartes sabotages: ${sabotageCards.length}`
+            }
+        </div>
+        <div class="modal-buttons">
+            <button class="modal-button primary" onclick="closeModal()">Fermer</button>
+        </div>
+    `;
+    
+    showModal(content);
+}
+
+function toggleEvents() {
+    eventsEnabled = !eventsEnabled;
+    saveSettings();
+    showSettings(); // Rafraîchir
+}
+
+function toggleFullscreen() {
+    fullScreenMode = !fullScreenMode;
+    saveSettings();
+    showSettings(); // Rafraîchir
+}
+
+function changePlayerCount(delta) {
+    const newCount = numberOfPlayers + delta;
+    if (newCount >= 2 && newCount <= 8) {
+        numberOfPlayers = newCount;
+        
+        // Ajuster la liste des joueurs
+        while (players.length < numberOfPlayers) {
+            const index = players.length;
+            players.push({
+                name: loadPlayerName(index),
+                score: 0
+            });
+        }
+        while (players.length > numberOfPlayers) {
+            players.pop();
+        }
+        
+        updatePlayersDisplay();
+        saveSettings();
+        showSettings(); // Rafraîchir
+    }
+}
+
+// 📋 HISTORIQUE
+function showHistory() {
+    let content = '<div class="modal-title">Historique des parties</div>';
+    
+    if (history.length === 0) {
+        content += '<div style="text-align: center; color: #666; margin: 20px 0;">Aucune partie enregistrée</div>';
+    } else {
+        content += '<div style="max-height: 300px; overflow-y: auto;">';
+        
+        history.forEach(game => {
+            const date = new Date(game.timestamp);
+            const duration = formatDuration(game.duration);
+            const mode = game.mode || 'classic';
+            const modeIcon = mode === 'saboteurs' ? '👥' : '⛽';
+            const modeText = mode === 'saboteurs' ? 'Saboteurs' : 'Classique';
+            
+            content += `
+                <div class="history-item">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+                        <span style="font-size: 20px;">${modeIcon}</span>
+                        <div class="history-winner">🏆 ${game.winner}</div>
+                    </div>
+                    <div class="history-details">
+                        Durée: ${duration}<br>
+                        Mode: ${modeText}<br>
+                        ${date.toLocaleDateString()} ${date.toLocaleTimeString().slice(0,5)}
+                    </div>
+                </div>
+            `;
+        });
+        
+        content += '</div>';
+    }
+    
+    content += `
+        <div class="modal-buttons">
+            <button class="modal-button primary" onclick="closeModal()">Fermer</button>
+        </div>
+    `;
+    
+    showModal(content);
+}
+
+// 🪟 GESTION DES MODALS
+function showModal(content) {
+    document.getElementById('modalContent').innerHTML = content;
+    document.getElementById('modalOverlay').classList.remove('hidden');
+}
+
+function closeModal() {
+    document.getElementById('modalOverlay').classList.add('hidden');
+}
+
+function showEndGameDialog(winner) {
+    const content = `
+        <div class="modal-title">
+            🏆 Fin de partie !
+        </div>
+        <div style="text-align: center;">
+            ${winner && winner !== 'Partie interrompue' ? `
+                <div style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">
+                    🎉 Félicitations !
+                </div>
+                <div style="font-size: 18px; color: #52C41A; font-weight: 600; margin-bottom: 20px;">
+                    ${winner} remporte la partie !
+                </div>
+            ` : `
+                <div style="font-size: 18px; font-weight: bold; margin-bottom: 20px;">
+                    Partie terminée
+                </div>
+            `}
+            
+            <div style="padding: 15px; background: rgba(74,144,226,0.1); border: 1px solid #4A90E2; border-radius: 10px; margin: 20px 0;">
+                <div style="font-size: 14px; color: #666;">Durée de la partie</div>
+                <div style="font-size: 24px; font-weight: bold; color: ${gameMode === 'saboteurs' ? '#E91E63' : '#4A90E2'};">
+                    ${formatDuration(gameDuration)}
+                </div>
+            </div>
+            
+            <div style="text-align: left;">
+                <div style="font-weight: bold; margin-bottom: 10px;">Scores finaux:</div>
+                ${players.map(player => `
+                    <div style="display: flex; justify-content: space-between; margin: 2px 0;">
+                        <span>${player.name}</span>
+                        <span style="font-weight: bold; color: ${player.name === winner ? '#52C41A' : 'inherit'};">
+                            ${player.score} pts
+                        </span>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+        
+        <div class="modal-buttons">
+            <button class="modal-button" onclick="newGame()">Nouvelle partie</button>
+            <button class="modal-button" onclick="goBackToSelection()">Retour</button>
+            <button class="modal-button primary" onclick="goBackToHome()">Accueil</button>
+        </div>
+    `;
+    
+    showModal(content);
+}
+
+function newGame() {
+    closeModal();
+    resetGame();
+}
+
+function goBackToSelection() {
+    closeModal();
+    if (gameMode === 'saboteurs') {
+        showTeamConfig();
+    } else {
+        showModeSelection();
+    }
+}
+
+function goBackToHome() {
+    closeModal();
+    showHome();
+}
+
+// 🚀 INITIALISATION
+function init() {
+    loadSettings();
+    loadHistory();
+    showHome();
+    
+    // Gestion des clics sur l'overlay pour fermer les modals
+    document.getElementById('modalOverlay').addEventListener('click', (e) => {
+        if (e.target.id === 'modalOverlay') {
+            closeModal();
+        }
+    });
+    
+    // Interaction utilisateur requise pour l'audio sur certains navigateurs
+    document.addEventListener('click', function initAudio() {
+        // Autoriser l'audio après le premier clic
+        document.removeEventListener('click', initAudio);
+    }, { once: true });
+    
+    console.log('🎮 Gas Station loaded with full assets!');
+}
+
+// Lancer l'application quand la page est chargée
+document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>
